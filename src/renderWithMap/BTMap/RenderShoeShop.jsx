@@ -1,4 +1,5 @@
 import React from "react";
+import ProductCard from "./ProductCard";
 const data = [
   {
     sizes: [32, 33, 34, 35],
@@ -79,7 +80,22 @@ const data = [
   },
 ];
 const RenderShoeShop = () => {
-  return <div>RenderShoeShop</div>;
+  const renderCardItem = () => {
+    const arrJSX = data.map((item) => {
+      return (
+        <div className="w-[25%]">
+          <ProductCard dataShoe={item} />;
+        </div>
+      );
+    });
+    return arrJSX;
+  };
+  return (
+    <div className="container mx-auto">
+      <h1>Shoe shop</h1>
+      <div className="flex gap-1">{renderCardItem()}</div>
+    </div>
+  );
 };
 
 export default RenderShoeShop;

@@ -10,6 +10,7 @@ import ChangeCarColor from "./state/ChangeCarColor";
 import DemoProps from "./props/DemoProps";
 import RenderWithMap from "./renderWithMap/RenderWithMap";
 import RenderShoeShop from "./renderWithMap/BTMap/RenderShoeShop";
+import DanhSachSanPham from "./LiftingStateUp/DanhSachSanPham";
 
 const App = () => {
   return (
@@ -24,7 +25,8 @@ const App = () => {
       {/* <ChangeCarColor /> */}
       {/* <DemoProps /> */}
       {/* <RenderWithMap /> */}
-      <RenderShoeShop />
+      {/* <RenderShoeShop /> */}
+      <DanhSachSanPham/>
     </>
   );
 };
