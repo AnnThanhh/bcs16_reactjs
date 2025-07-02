@@ -87,17 +87,57 @@ const DanhSachSanPham = () => {
   };
 
   const xoaGioHang = (maSPCLick) => {
+    console.log(maSPCLick);
     //xử lý xóa -> tìm tới id gioHang.filter -> item -> item.id !== maSPClick
+    let gioHangUpdate = [...gioHang.filter((item) => item.maSP !== maSPCLick)];
+
+    setGioHang(gioHangUpdate);
   };
+
+  const handleTangGiamSoLuong = (maSPCLick, soLuong) => {
+    //số lượng sẽ là 1 hoặc -1
+    // sử dụng find để tìm ra sản phảm trong giỏ hàng => sp = gioHang.find( item.id === maSPCLick)
+    let sp = gioHang.find((item) => item.maSP === maSPCLick);
+    //if(sp){sp.soLuong += soLuong}
+    if (sp) {
+      sp.soLuong += soLuong;
+      if (sp.soLuong === 0) {
+        if (window.confirm("Bạn có muốn xóa sản phẩm khỏi giỏ hàng không?")) {
+          xoaGioHang(sp.maSP);
+          return;
+        } else {
+          sp.soLuong = 1;
+        }
+      }
+    }
+    //sau khi thay đổi thì setState lại cho giỏ hàng
+    let gioHangUpdate = [...gioHang];
+    setGioHang(gioHangUpdate);
+  };
+
+  const handleOnChangeInput = (maSPCLick, soLuong) => {
+    let sp = gioHang.find((item) => item.maSP === maSPCLick);
+    if (sp) {
+      sp.soLuong = soLuong;
+    }
+    let gioHangUpdate = [...gioHang];
+    setGioHang(gioHangUpdate);
+  };
+
   return (
     <div className="container mx-auto">
       <h1 className="text-center mt-5">Giỏ Hàng</h1>
-      <GioHang gioHang={gioHang} xoaGioHang={xoaGioHang} />
+      <GioHang
+        gioHang={gioHang}
+        xoaGioHang={xoaGioHang}
+        handleTangGiamSoLuong={handleTangGiamSoLuong}
+        handleOnChangeInput={handleOnChangeInput}
+      />
       <h1 className="text-center mt-5">Danh sách sản phẩm</h1>
       <div className="grid grid-cols-3 gap-2">
         {data.map((sp) => {
           return (
-            <div key={sp.id}>
+            <div key={sp.maSP}>
               <SanPham
                 sp={sp}
                 handleChange={setSpChitiet}

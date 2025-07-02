@@ -11,6 +11,8 @@ import DemoProps from "./props/DemoProps";
 import RenderWithMap from "./renderWithMap/RenderWithMap";
 import RenderShoeShop from "./renderWithMap/BTMap/RenderShoeShop";
 import DanhSachSanPham from "./LiftingStateUp/DanhSachSanPham";
+import ShoePage from "./APIdemo/ShoePage";
+import DemoLoginForm from "./DemoForm/DemoLoginForm";
 
 const App = () => {
   return (
@@ -26,7 +28,9 @@ const App = () => {
       {/* <DemoProps /> */}
       {/* <RenderWithMap /> */}
       {/* <RenderShoeShop /> */}
-      <DanhSachSanPham/>
+      {/* <DanhSachSanPham/> */}
+      {/* <ShoePage /> */}
+      <DemoLoginForm />
     </>
   );
 };
