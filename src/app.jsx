@@ -16,6 +16,9 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import ForgotPass from "./pages/ForgotPass";
 import Details from "./pages/Details";
+import Search from "./pages/Search";
+import AddProduct from "./pages/AddProduct";
+import EditProduct from "./pages/EditProduct";
 const App = () => {
   return (
     <BrowserRouter>
@@ -38,6 +41,7 @@ const App = () => {
           <Route path="detail">
             <Route path=":prodID" element={<Details />}></Route>
           </Route>
+          <Route path="search" element={<Search />}></Route>
         </Route>
 
         <Route path="admin" element={<AdminPageMaster />}>
@@ -51,6 +55,10 @@ const App = () => {
           <Route path="profile" element={<Profile />}></Route>
           <Route path="forgotpass" element={<ForgotPass />}></Route>
           <Route path="*" element={<Page404 />}></Route>
+          <Route path="add-product" element={<AddProduct />}></Route>
+          <Route path="edit-product">
+            <Route path=":id" element={<EditProduct />}></Route>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
