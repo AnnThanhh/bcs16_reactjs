@@ -4,16 +4,22 @@ import axios from "axios";
 const ProductManagement = () => {
   const [arrProduct, setArrProduct] = useState([]);
   const [search, setSearch] = useSearchParams();
-  const getAllProductAPI = async () => {
-    const res = await axios.get(
-      "https://apistore.cybersoft.edu.vn/api/Product"
-    );
+  const valueKeyword = search.get("k"); // lấy giá trị từ trên thanh url
+  const getProductAPI = async () => {
+    let url = "";
+    if (valueKeyword) {
+      url = `https://apistore.cybersoft.edu.vn/api/Product?keyword=${valueKeyword}`;
+    } else {
+      url = "https://apistore.cybersoft.edu.vn/api/Product";
+    }
+    const res = await axios.get(url);
     const data = res.data.content;
     setArrProduct(data);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log("click");
   };
 
   const handleInput = (e) => {
@@ -23,9 +29,9 @@ const ProductManagement = () => {
   };
 
   useEffect(() => {
-    getAllProductAPI();
-  }, []);
-  
+    getProductAPI();
+  }, [valueKeyword]);
+
   return (
     <div className="mt-5">
       <h2>Dashboard</h2>
@@ -40,7 +46,10 @@ const ProductManagement = () => {
               className="w-full pl-4 pr-12 py-2 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
               onInput={handleInput}
             />
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-black">
+            <button
+              type="submit"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-black"
+            >
               🔍
             </button>
           </div>
@@ -52,7 +61,7 @@ const ProductManagement = () => {
           type="button"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
-          <NavLink to={"/admin/add-product"}>Add product</NavLink>
+          <NavLink to={"/admin/product"}>Add product</NavLink>
         </button>
       </div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -77,9 +86,12 @@ const ProductManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {arrProduct.map((item) => {
+            {arrProduct?.map((item) => {
               return (
-                <tr key={item.id} className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+                <tr
+                  key={item.id}
+                  className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
+                >
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -92,24 +104,32 @@ const ProductManagement = () => {
                   </td>
                   <td className="px-6 py-4">{item.quantity}</td>
                   <td className="px-6 py-4">
-                    <a
-                      href="#"
+                    <NavLink
+                      to={`/admin/product/${item.id}`}
                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline mr-2"
                     >
                       Edit
-                    </a>
-                    <a
-                      href="#"
+                    </NavLink>
+                    <button
+                      
                       className="font-medium text-red-600 dark:text-blue-500 hover:underline mr-2"
+                      onClick={async (e) => {
+                        if (window.confirm("Bạn có muốn xóa không?")) {
+                          const res = await axios.delete(
+                            `https://apistore.cybersoft.edu.vn/api/Product/${item.id}`
+                          );
+                          getProductAPI();
+                        }
+                      }}
                     >
                       Delete
-                    </a>
-                    <a
-                      href="#"
+                    </button>
+                    <NavLink
+                      to={`/user/detail/${item.id}`}
                       className="font-medium text-green-600 dark:text-blue-500 hover:underline"
                     >
                       View Details
-                    </a>
+                    </NavLink>
                   </td>
                 </tr>
               );

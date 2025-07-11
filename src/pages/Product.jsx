@@ -1,14 +1,19 @@
-import axios from "axios";
 import React, { useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useMatch, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
-
-const EditProduct = () => {
-  const param = useParams(); // lấy được id từ url
-  const navigate = useNavigate();
+import axios from "axios";
+import * as yup from "yup";
+const Product = () => {
+  const match = useMatch("/admin/product/:id");
+  const param = useParams();
   const { id } = param;
-  // console.log(id);
-  const frmEdit = useFormik({
+  const navigate = useNavigate();
+  //   console.log(match);
+  //nếu là null, component product sẽ phục vụ cho add product, ngược lại có kết quả trả ra khác null thì sẽ phục vụ edit product
+  //kiểm tra điều kiện có phải là đang edit k
+  const isEdit = !!match;
+  //   console.log(isEdit); // do bản thân qui định, false = add product, true = edit product
+  const frmProd = useFormik({
     initialValues: {
       id: "",
       name: "",
@@ -19,15 +24,26 @@ const EditProduct = () => {
       imgLink: "",
     },
     onSubmit: async (values) => {
-      // console.log(values);
-      const res = await axios.put(
-        "https://apistore.cybersoft.edu.vn/api/Product/updateProduct",
-        values
-      );
-      // console.log(res.data.content);
-      alert("Update thành công");
-      navigate("/admin/productmanag")
+      console.log(values);
+      if (isEdit) {
+        const res = await axios.put(
+          "https://apistore.cybersoft.edu.vn/api/Product/updateProduct",
+          values
+        );
+        // console.log(res.data.content);
+        alert("Update thành công");
+      } else {
+        const res = await axios.post(
+          "https://apistore.cybersoft.edu.vn/api/Product/addNew",
+          values
+        );
+        alert("Add thành công");
+      }
+      navigate("/admin/productmanagement");
     },
+    validationSchema: yup.object().shape({
+      //ở đây sẽ làm valiation cho cả add và edit product
+    }),
   });
   const getProductByID = async () => {
     const res = await axios.get(
@@ -36,18 +52,22 @@ const EditProduct = () => {
     const data = res.data.content;
     // console.log(data);
     //lấy dữ liệu thành công => đưa lên form tương ứng với từng field được định nghĩa
-    // frmEdit.setFieldValue("name", res.data.content.name);
-    frmEdit.setValues(data);
+    // frmProd.setFieldValue("name", res.data.content.name);
+    frmProd.setValues(data);
   };
 
   useEffect(() => {
-    getProductByID();
-  }, []);
+    if (isEdit) {
+      getProductByID();
+    }
+  }, [isEdit]);
   return (
     <div>
       <div className="max-w-2xl mx-auto p-6 bg-white rounded-2xl shadow-md space-y-6">
-        <h2 className="text-2xl font-bold text-gray-800">Update Product</h2>
-        <form className="space-y-4" onSubmit={frmEdit.handleSubmit}>
+        <h2 className="text-2xl font-bold text-gray-800">
+          {isEdit ? "Update Product" : "Add product"}
+        </h2>
+        <form className="space-y-4" onSubmit={frmProd.handleSubmit}>
           <div>
             <label
               htmlFor="id"
@@ -59,10 +79,10 @@ const EditProduct = () => {
               type="text"
               id="id"
               name="id"
-              disabled
+              disabled={isEdit}
               className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm bg-gray-100 cursor-not-allowed"
-              value={frmEdit.values.id}
-              onChange={frmEdit.handleChange}
+              value={frmProd.values.id}
+              onChange={frmProd.handleChange}
             />
           </div>
           <div>
@@ -77,8 +97,8 @@ const EditProduct = () => {
               id="name"
               name="name"
               className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:ring focus:ring-blue-200"
-              value={frmEdit.values.name}
-              onChange={frmEdit.handleChange}
+              value={frmProd.values.name}
+              onChange={frmProd.handleChange}
             />
           </div>
           <div>
@@ -93,8 +113,8 @@ const EditProduct = () => {
               id="price"
               name="price"
               className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:ring focus:ring-blue-200"
-              value={frmEdit.values.price}
-              onChange={frmEdit.handleChange}
+              value={frmProd.values.price}
+              onChange={frmProd.handleChange}
             />
           </div>
           <div>
@@ -109,8 +129,8 @@ const EditProduct = () => {
               id="quantity"
               name="quantity"
               className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:ring focus:ring-blue-200"
-              value={frmEdit.values.quantity}
-              onChange={frmEdit.handleChange}
+              value={frmProd.values.quantity}
+              onChange={frmProd.handleChange}
             />
           </div>
           <div>
@@ -125,8 +145,8 @@ const EditProduct = () => {
               id="shortDescription"
               name="shortDescription"
               className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:ring focus:ring-blue-200"
-              value={frmEdit.values.shortDescription}
-              onChange={frmEdit.handleChange}
+              value={frmProd.values.shortDescription}
+              onChange={frmProd.handleChange}
             />
           </div>
           <div>
@@ -141,8 +161,8 @@ const EditProduct = () => {
               name="description"
               rows={4}
               className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:ring focus:ring-blue-200"
-              value={frmEdit.values.description}
-              onChange={frmEdit.handleChange}
+              value={frmProd.values.description}
+              onChange={frmProd.handleChange}
             />
           </div>
           <div>
@@ -157,8 +177,8 @@ const EditProduct = () => {
               id="imgLink"
               name="imgLink"
               className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:ring focus:ring-blue-200"
-              value={frmEdit.values.imgLink}
-              onChange={frmEdit.handleChange}
+              value={frmProd.values.imgLink}
+              onChange={frmProd.handleChange}
             />
           </div>
           <div>
@@ -167,7 +187,7 @@ const EditProduct = () => {
             </label>
             <img
               id="previewImage"
-              src={frmEdit.values.image}
+              src={frmProd.values.image}
               alt="Image Preview"
               className="mt-2 rounded-lg shadow border w-48 h-auto object-cover"
             />
@@ -177,7 +197,7 @@ const EditProduct = () => {
               type="submit"
               className="w-full py-2 px-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 shadow-md transition"
             >
-              Update Product
+              Submit
             </button>
           </div>
         </form>
@@ -186,4 +206,4 @@ const EditProduct = () => {
   );
 };
 
-export default EditProduct;
+export default Product;

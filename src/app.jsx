@@ -19,6 +19,8 @@ import Details from "./pages/Details";
 import Search from "./pages/Search";
 import AddProduct from "./pages/AddProduct";
 import EditProduct from "./pages/EditProduct";
+import Product from "./pages/Product";
+import AntDesignDemo from "./AntDesignDemo/AntDesignDemo";
 const App = () => {
   return (
     <BrowserRouter>
@@ -42,6 +44,7 @@ const App = () => {
             <Route path=":prodID" element={<Details />}></Route>
           </Route>
           <Route path="search" element={<Search />}></Route>
+          <Route path="antd" element={<AntDesignDemo />}></Route>
         </Route>
 
         <Route path="admin" element={<AdminPageMaster />}>
@@ -58,6 +61,11 @@ const App = () => {
           <Route path="add-product" element={<AddProduct />}></Route>
           <Route path="edit-product">
             <Route path=":id" element={<EditProduct />}></Route>
+          </Route>
+
+          <Route path="product" element={<Product />}></Route>
+          <Route path="product">
+            <Route path=":id" element={<Product />}></Route>
           </Route>
         </Route>
       </Routes>
