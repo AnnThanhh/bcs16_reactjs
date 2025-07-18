@@ -3,8 +3,12 @@ import { Rate } from "antd";
 
 const AntDesignDemo = () => {
   return (
-    <div className="container mx-auto">
-      <Rate />
+    <div className="mt-5">
+      <Rate
+        allowHalf
+        defaultValue={3.5}
+        character={<i className="fa-solid fa-heart" />}
+      />
     </div>
   );
 };
