@@ -3,8 +3,10 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addProductAction } from "../../redux/reducers/cartReducer";
+import { useSelector } from "react-redux";
 
 const HomePageRedux = () => {
+  const cart = useSelector((state) => state.cartReducer.cartDefault);
   const [shoePage, setShoePage] = useState([]);
   const dispatch = useDispatch();
   const getAllProductAxios = async () => {
@@ -25,7 +27,7 @@ const HomePageRedux = () => {
           type="button"
           className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
         >
-          Cart
+          Cart ({cart.length})
         </button>
       </NavLink>
       <div className="flex flex-wrap">
@@ -63,7 +65,10 @@ const HomePageRedux = () => {
                     //   payload: { ...item, quantityCart: 1 },
                     // };
                     // console.log(action.payload);
-                    const action = addProductAction({ ...item, quantity: 1 });
+                    const action = addProductAction({
+                      ...item,
+                      quantityCart: 1,
+                    });
                     console.log(action);
                     dispatch(action);
                   }}

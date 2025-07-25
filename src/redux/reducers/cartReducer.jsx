@@ -27,10 +27,29 @@ const cartReducer = createSlice({
       }
       //tự động xử lý immutable
     },
-    deleteProductionAction: () => {},
+    deleteProductionAction: (state, action) => {
+      const { payload } = action;
+
+      state.cartDefault = state.cartDefault.filter(
+        (item) => item.id !== payload
+      );
+    },
+
+    changeQuantityCartAction: (state, action) => {
+      const { payload } = action;
+
+      let itemCart = state.cartDefault.find((item) => item.id === payload.id);
+      if (itemCart) {
+        itemCart.quantityCart += payload.quantity;
+      }
+    },
   }, // hàm xử lý action
 });
 
-export const { addProductAction } = cartReducer.actions; //bóc tách hàm xử lý action
+export const {
+  addProductAction,
+  deleteProductionAction,
+  changeQuantityCartAction,
+} = cartReducer.actions; //bóc tách hàm xử lý action
 
 export default cartReducer.reducer;

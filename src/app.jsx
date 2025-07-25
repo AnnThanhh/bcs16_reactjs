@@ -29,6 +29,7 @@ import ChangeNumberRedux from "./DemoRedux/changeNumberRedux";
 import ChangeFontSizeRedux from "./DemoRedux/ChangeFontSizeRedux";
 import CartRedux from "./DemoRedux/ShoeShop/CartRedux";
 import HomePageRedux from "./DemoRedux/ShoeShop/HomePageRedux";
+import Register from "./pages/Register";
 const App = () => {
   return (
     <BrowserRouter>
@@ -47,6 +48,7 @@ const App = () => {
             ></Route>
             <Route path="redux-homepage" element={<HomePageRedux />}></Route>
             <Route path="redux-cart" element={<CartRedux />}></Route>
+            <Route path="register" element={<Register />}></Route>
           </Route>
 
           <Route path="user" element={<UserPageMaster />}>
