@@ -64,6 +64,7 @@ const HomePageRedux = () => {
                     // };
                     // console.log(action.payload);
                     const action = addProductAction({ ...item, quantity: 1 });
+                    console.log(action);
                     dispatch(action);
                   }}
                 >

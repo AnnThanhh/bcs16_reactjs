@@ -18,18 +18,16 @@ const cartReducer = createSlice({
   initialState, //giá trị default ban đầu
   reducers: {
     addProductAction: (state, action) => {
-      if (action.type == "ADD_PRODUCT") {
-        const cartItem = state.cartDefault.find(
-          (item) => item.id == payload.id
-        );
-        if (cartItem) {
-          cartItem.quantityCart += 1;
-        } else {
-          state.cartDefault.push(action.payload);
-        }
+      const { type, payload } = action;
+      const cartItem = state.cartDefault.find((item) => item.id == payload.id);
+      if (cartItem) {
+        cartItem.quantityCart += 1;
+      } else {
+        state.cartDefault.push(payload);
       }
       //tự động xử lý immutable
     },
+    deleteProductionAction: () => {},
   }, // hàm xử lý action
 });
 
