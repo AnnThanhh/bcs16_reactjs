@@ -30,9 +30,13 @@ import ChangeFontSizeRedux from "./DemoRedux/ChangeFontSizeRedux";
 import CartRedux from "./DemoRedux/ShoeShop/CartRedux";
 import HomePageRedux from "./DemoRedux/ShoeShop/HomePageRedux";
 import Register from "./pages/Register";
+
+//cấu hình customBrowserHistory
+import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
+import { navigateHistory } from "./utils/interceptor";
 const App = () => {
   return (
-    <BrowserRouter>
+    <HistoryRouter history={navigateHistory}>
       <Provider store={store}>
         <Routes>
           <Route path="" element={<HomePageMaster />}>
@@ -49,6 +53,8 @@ const App = () => {
             <Route path="redux-homepage" element={<HomePageRedux />}></Route>
             <Route path="redux-cart" element={<CartRedux />}></Route>
             <Route path="register" element={<Register />}></Route>
+            <Route path="profile" element={<Profile />}></Route>
+            <Route path="login" element={<Login />}></Route>
           </Route>
 
           <Route path="user" element={<UserPageMaster />}>
@@ -71,8 +77,7 @@ const App = () => {
               path="productmanagement"
               element={<ProductManagement />}
             ></Route>
-            <Route path="login" element={<Login />}></Route>
-            <Route path="profile" element={<Profile />}></Route>
+
             <Route path="forgotpass" element={<ForgotPass />}></Route>
             <Route path="*" element={<Page404 />}></Route>
             <Route path="add-product" element={<AddProduct />}></Route>
@@ -87,7 +92,7 @@ const App = () => {
           </Route>
         </Routes>
       </Provider>
-    </BrowserRouter>
+    </HistoryRouter>
   );
 };
 

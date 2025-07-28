@@ -1,6 +1,8 @@
 import React from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { setCookie } from "../utils/cookie.jsx";
 const Login = () => {
   const navigate = useNavigate();
   const frmLogin = useFormik({
@@ -8,17 +10,34 @@ const Login = () => {
       email: "",
       password: "",
     },
-    onSubmit: (values) => {
-      if (values.email === "bcs16@gmail.com" && values.password === "123123") {
-        navigate("/admin/profile");
-      } else {
-        navigate("/admin/forgotpass", { replace: true });
-      }
+    onSubmit: async (values) => {
+      // if (values.email === "bcs16@gmail.com" && values.password === "123123") {
+      //   navigate("/admin/profile");
+      // } else {
+      //   navigate("/admin/forgotpass", { replace: true });
+      // }
+      console.log(values);
+      const res = await axios.post(
+        "https://apistore.cybersoft.edu.vn/api/Users/signin",
+        values
+      );
+
+      console.log(res.data.content);
+      //lưu localstorage
+      //token
+      const token = res.data.content.accessToken;
+      localStorage.setItem("token", token);
+
+      //userLogin dp là 1 {} -> convert stringify
+      const userLogin = JSON.stringify(res.data.content);
+      localStorage.setItem("userLogin", userLogin);
+      setCookie("accessToken", token, 7);
+      navigate("/profile")
     },
   });
   return (
     <div>
-      <form className="max-w-sm mx-auto" onSubmit={frmLogin.handleSubmit}>
+      <form className="max-w-sm mx-auto mt-5" onSubmit={frmLogin.handleSubmit}>
         <div className="mb-5">
           <label
             htmlFor="email"

@@ -2,10 +2,11 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { handleChangeInputAction } from "../redux/reducers/userReducer";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const userRegister = useSelector((state) => state.userReducer.userRegister);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleChangeInput = (e) => {
@@ -27,6 +28,8 @@ const Register = () => {
       );
 
       alert("Đăng ký thành công");
+
+      navigate("/profile")
     } catch (error) {
       console.log(error);
     }
