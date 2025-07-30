@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setCookie } from "../utils/cookie.jsx";
+import { TOKEN, USER_LOGIN } from "../utils/interceptor.jsx";
 const Login = () => {
   const navigate = useNavigate();
   const frmLogin = useFormik({
@@ -26,13 +27,13 @@ const Login = () => {
       //lưu localstorage
       //token
       const token = res.data.content.accessToken;
-      localStorage.setItem("token", token);
-
+      localStorage.setItem(TOKEN, token);
+      console.log(TOKEN);
       //userLogin dp là 1 {} -> convert stringify
       const userLogin = JSON.stringify(res.data.content);
-      localStorage.setItem("userLogin", userLogin);
-      setCookie("accessToken", token, 7);
-      navigate("/profile")
+      localStorage.setItem(USER_LOGIN, userLogin);
+      setCookie(TOKEN, token, 7);
+      navigate("/profile");
     },
   });
   return (

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getCookie } from "./cookie";
+import { getCookie, setCookie } from "./cookie";
 import { useNavigate } from "react-router-dom";
 import { createBrowserHistory } from "history";
 export const navigateHistory = createBrowserHistory();
@@ -7,7 +7,35 @@ export const navigateHistory = createBrowserHistory();
 const DOMAIN = "https://apistore.cybersoft.edu.vn";
 const TOKEN_CYBERSOFT =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJCb290Y2FtcCB0ZXN0IiwiSGV0SGFuU3RyaW5nIjoiMTUvMDEvMjAyNiIsIkhldEhhblRpbWUiOiIxNzY4NDM1MjAwMDAwIiwibmJmIjoxNzQwMDcwODAwLCJleHAiOjE3Njg1ODI4MDB9.UpZtRu0Q0g5o4QZjq_R0quQ3NScIjVcGsvLia8o6txA";
-const TOKEN = getCookie("accessToken");
+export const TOKEN = "accessToken";
+export const USER_LOGIN = "userLogin";
+
+function decodeJWT(token) {
+  if (!token) return null;
+
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 3) throw new Error("Invalid JWT");
+
+    const payload = parts[1];
+    const decoded = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+    return JSON.parse(decoded);
+  } catch (err) {
+    console.error("Failed to decode JWT:", err.message);
+    return null;
+  }
+}
+
+function isTokenExpired(token) {
+  const payload = decodeJWT(token); //dữ liệu sau khi phân tích
+  if (!payload || !payload.exp) return true; //nếu không decode được hoặc không tồn tại ngày hết hạn -> coi như token đã hết hạn
+
+  const now = Math.floor(Date.now() / 1000); // thời gian hiện tại (giây)
+  if (payload.exp && now > payload.exp) {
+    return true; //-> token hết hạn
+  }
+}
+
 export const http = axios.create({
   baseURL: DOMAIN,
   timeout: 3000, //đặt giới hạn thời gian chờ kết quả từ phía serverr
@@ -19,7 +47,7 @@ http.interceptors.request.use((req) => {
     //giữ lại các api phần chung và các api có header riêng
     ...req.headers,
     // "Authorization": localStorage.getItem(TOKEN)
-    Authorization: TOKEN,
+    Authorization: getCookie(TOKEN),
     tokenCybersoft: TOKEN_CYBERSOFT,
   };
   return req;
@@ -30,7 +58,25 @@ http.interceptors.response.use(
   (res) => {
     return res;
   },
-  (err) => {
+  async (err) => {
+    const isExpired = isTokenExpired(getCookie(TOKEN));
+    if (isExpired) {
+      try {
+        const res = await axios({
+          url: "https://apistore.cybersoft.edu.vn/api/Users/RefeshToken",
+          method: "POST",
+          headers: {
+            Authorization: getCookie(TOKEN),
+          },
+        });
+        //nếu thành công thì lưu token mới
+        localStorage.setItem(TOKEN, res.data.content.accessToken);
+        setCookie(TOKEN, res.data.content.accessToken, 7);
+      } catch (error) {
+        //nếu mà refresh thất bại thì yêu cầu đăng nhập lại
+        navigateHistory("/login");
+      }
+    }
     switch (err?.response.status) {
       case 400:
         {
@@ -43,9 +89,13 @@ http.interceptors.response.use(
         break;
 
       case 401:
+        //th2: token không hợp lệ -> đăng nhập
+        navigateHistory("/login");
         break;
 
       case 403:
+        alert("Bạn k có quyền truy cập")
+        navigateHistory("/")
         break;
 
       case 404:

@@ -2,18 +2,25 @@ import React, { useEffect } from "react";
 import { useParams, NavLink } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { getProductDetailByIDActionThunk } from "../redux/reducers/productReducer";
 const Details = () => {
   const param = useParams();
-  const [prodDetail, setProdDetail] = useState({});
+  // const [prodDetail, setProdDetail] = useState({});
+  const { prodDetail } = useSelector((state) => state.productReducer);
   const [transformValue, setTransformValue] = useState("rotate(0deg)");
+  
   console.log(param);
+  const dispatch = useDispatch();
   const getProductByID = async () => {
-    const res = await axios.get(
-      `https://apistore.cybersoft.edu.vn/api/Product/getbyid?id=${param.prodID}`
-    );
-    const data = res.data.content;
-    console.log(data);
-    setProdDetail(data);
+    // const res = await axios.get(
+    //   `https://apistore.cybersoft.edu.vn/api/Product/getbyid?id=${param.prodID}`
+    // );
+    // const data = res.data.content;
+    // console.log(data);
+    // setProdDetail(data);
+    const actionThunk = getProductDetailByIDActionThunk(param.prodID);
+    dispatch(actionThunk);
   };
 
   useEffect(() => {
