@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setCookie } from "../utils/cookie.jsx";
 import { TOKEN, USER_LOGIN } from "../utils/interceptor.jsx";
+import { loginActionThunk } from "../redux/reducers/userReducer.jsx";
+import { useDispatch } from "react-redux";
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const frmLogin = useFormik({
     initialValues: {
       email: "",
@@ -17,22 +20,24 @@ const Login = () => {
       // } else {
       //   navigate("/admin/forgotpass", { replace: true });
       // }
-      console.log(values);
-      const res = await axios.post(
-        "https://apistore.cybersoft.edu.vn/api/Users/signin",
-        values
-      );
-
-      console.log(res.data.content);
-      //lưu localstorage
-      //token
-      const token = res.data.content.accessToken;
-      localStorage.setItem(TOKEN, token);
-      console.log(TOKEN);
-      //userLogin dp là 1 {} -> convert stringify
-      const userLogin = JSON.stringify(res.data.content);
-      localStorage.setItem(USER_LOGIN, userLogin);
-      setCookie(TOKEN, token, 7);
+      // console.log(values);
+      // const res = await axios.post(
+      //   "https://apistore.cybersoft.edu.vn/api/Users/signin",
+      //   values
+      // );
+      // console.log(res.data.content);
+      // //lưu localstorage
+      // //token
+      // const token = res.data.content.accessToken;
+      // localStorage.setItem(TOKEN, token);
+      // console.log(TOKEN);
+      // //userLogin dp là 1 {} -> convert stringify
+      // const userLogin = JSON.stringify(res.data.content);
+      // localStorage.setItem(USER_LOGIN, userLogin);
+      // setCookie(TOKEN, token, 7);
+      // navigate("/profile");
+      //sử dụng redux thunk
+      dispatch(loginActionThunk(values));
       navigate("/profile");
     },
   });

@@ -3,27 +3,31 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCookie } from "../utils/cookie";
 import { http } from "../utils/interceptor";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfileActionThunk } from "../redux/reducers/userReducer";
 const Profile = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState();
+  // const [user, setUser] = useState();
+  const { profile } = useSelector((state) => state.userReducer);
+  const dispatch = useDispatch();
   const getProfileApi = async () => {
-    try {
-      // const res = await axios({
-      //   url: "https://apistore.cybersoft.edu.vn/api/Users/getProfile",
-      //   method: "POST",
-      //   headers: {
-      //     Authorization: getCookie("accessToken"),
-      //   },
-      // });
-      const res = await http.post("/api/Users/getProfile");
-
-      console.log(res.data.content);
-      setUser(res.data.content);
-    } catch (error) {
-      //thất bại thì sẽ điều hướng về trang login
-      alert("đăng nhập để vào profile");
-      navigate("/login");
-    }
+    // try {
+    //   // const res = await axios({
+    //   //   url: "https://apistore.cybersoft.edu.vn/api/Users/getProfile",
+    //   //   method: "POST",
+    //   //   headers: {
+    //   //     Authorization: getCookie("accessToken"),
+    //   //   },
+    //   // });
+    //   const res = await http.post("/api/Users/getProfile");
+    //   console.log(res.data.content);
+    //   setUser(res.data.content);
+    // } catch (error) {
+    //   //thất bại thì sẽ điều hướng về trang login
+    //   alert("đăng nhập để vào profile");
+    //   navigate("/login");
+    // }
+    dispatch(getProfileActionThunk);
   };
   useEffect(() => {
     getProfileApi();
@@ -34,12 +38,12 @@ const Profile = () => {
       <div className="flex items-center space-x-6 mb-6">
         <img
           className="w-24 h-24 rounded-full border object-cover"
-          src={user?.avatar}
+          src={profile?.avatar}
           alt="Avatar"
         />
         <div>
-          <h2 className="text-2xl font-bold">{user?.name}</h2>
-          <p className="text-gray-500">{user?.email}</p>
+          <h2 className="text-2xl font-bold">{profile?.name}</h2>
+          <p className="text-gray-500">{profile?.email}</p>
         </div>
       </div>
 
@@ -47,21 +51,23 @@ const Profile = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700">
         <div>
           <p className="text-gray-400">Phone</p>
-          <p className="font-medium">{user?.phone}</p>
+          <p className="font-medium">{profile?.phone}</p>
         </div>
         <div>
           <p className="text-gray-400">Gender</p>
-          <p className="font-medium">{user?.gender ? "Male" : "Female"}</p>
+          <p className="font-medium">{profile?.gender ? "Male" : "Female"}</p>
         </div>
         <div>
           <p className="text-gray-400">Facebook ID</p>
           <p className="font-medium text-gray-500 italic">
-            {user?.facebookId ? user?.facebookId : "No linked account"}
+            {profile?.facebookId ? profile?.facebookId : "No linked account"}
           </p>
         </div>
         <div>
           <p className="text-gray-400">Account Status</p>
-          <p className="font-medium">{user?.deleted ? "Deleted" : "Active"}</p>
+          <p className="font-medium">
+            {profile?.deleted ? "Deleted" : "Active"}
+          </p>
         </div>
       </div>
 
@@ -80,11 +86,11 @@ const Profile = () => {
         <h3 className="text-lg font-semibold text-gray-800 mb-2">
           Order History
         </h3>
-        {user?.ordersHistory.length === 0 ? (
+        {profile?.ordersHistory?.length === 0 ? (
           <div className="text-gray-500 italic">You have no orders yet.</div>
         ) : (
           <ul className="list-disc pl-5 text-gray-700">
-            {user?.ordersHistory.map((order, idx) => (
+            {profile?.ordersHistory?.map((order, idx) => (
               <li key={idx}>{order}</li>
             ))}
           </ul>

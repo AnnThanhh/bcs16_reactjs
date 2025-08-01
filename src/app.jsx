@@ -30,6 +30,7 @@ import ChangeFontSizeRedux from "./DemoRedux/ChangeFontSizeRedux";
 import CartRedux from "./DemoRedux/ShoeShop/CartRedux";
 import HomePageRedux from "./DemoRedux/ShoeShop/HomePageRedux";
 import Register from "./pages/Register";
+import ShakeDiceGamePage from "./pages/ShakeDiceGamePage";
 
 //cấu hình customBrowserHistory
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
@@ -55,6 +56,10 @@ const App = () => {
             <Route path="register" element={<Register />}></Route>
             <Route path="profile" element={<Profile />}></Route>
             <Route path="login" element={<Login />}></Route>
+            <Route
+              path="shake-dice-game"
+              element={<ShakeDiceGamePage />}
+            ></Route>
           </Route>
 
           <Route path="user" element={<UserPageMaster />}>
