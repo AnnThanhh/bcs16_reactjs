@@ -27,7 +27,7 @@ import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import ChangeNumberRedux from "./DemoRedux/changeNumberRedux";
 import ChangeFontSizeRedux from "./DemoRedux/ChangeFontSizeRedux";
-import CartRedux from "./DemoRedux/ShoeShop/CartRedux"; 
+import CartRedux from "./DemoRedux/ShoeShop/CartRedux";
 import HomePageRedux from "./DemoRedux/ShoeShop/HomePageRedux";
 import Register from "./pages/Register";
 import ShakeDiceGamePage from "./pages/ShakeDiceGamePage";
@@ -38,6 +38,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { navigateHistory } from "./utils/interceptor";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import UserManagementRQ from "./pages/ReactQueryDemo/UserManagementRQ";
 const queryClient = new QueryClient();
 const App = () => {
   return (
@@ -106,7 +107,10 @@ const App = () => {
             </Route>
 
             <Route path="react-query" element={<ReactQueryPageMaster />}>
-              <Route path="useMutation-demo" element={<UserManagement />}></Route>
+              <Route
+                path="useMutation-demo"
+                element={<UserManagementRQ />}
+              ></Route>
               <Route path="useClient-demo" element={<ShoeShopRQ />}></Route>
             </Route>
           </Routes>
