@@ -39,6 +39,10 @@ import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import { navigateHistory } from "./utils/interceptor";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import UserManagementRQ from "./pages/ReactQueryDemo/UserManagementRQ";
+import UseRefDemo from "./pages/HookToiUuRender/UseRefDemo";
+import UseMemoDemo from "./pages/HookToiUuRender/UseMemoDemo";
+import UseCallBackDemo from "./pages/HookToiUuRender/UseCallBackDemo";
+import CustomHookDemo from "./CustomHook/CustomHookDemo";
 const queryClient = new QueryClient();
 const App = () => {
   return (
@@ -67,6 +71,10 @@ const App = () => {
                 path="shake-dice-game"
                 element={<ShakeDiceGamePage />}
               ></Route>
+              <Route path="useref" element={<UseRefDemo />}></Route>
+              <Route path="usememo" element={<UseMemoDemo />}></Route>
+              <Route path="usecallback" element={<UseCallBackDemo />}></Route>
+              <Route path="customeHook" element={<CustomHookDemo />}></Route>
             </Route>
 
             <Route path="user" element={<UserPageMaster />}>
